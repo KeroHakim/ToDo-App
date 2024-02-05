@@ -32,7 +32,7 @@ class HomeActivity : AppCompatActivity() {
 
     // Room Database         // Table Name
     lateinit var binding: ActivityHomeBinding
-
+    lateinit var taskListFragment: TasksListFragment
     // Validation when typing in compile time
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,12 +41,19 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.fabAddTask.setOnClickListener {
             val addTaskBottomSheet = AddTaskBottomSheet()
+            addTaskBottomSheet.onTaskAddedListener = object : OnTaskAddedListener {
+                override fun onTaskAdded() {
+                    // Reload Fragment ->  TaskListFragment
+                    taskListFragment.getTasks()
+                }
+            }
             addTaskBottomSheet.show(supportFragmentManager, null)
         }
         binding.bottomNavigation.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.tasks -> {
-                    pushFragment(TasksListFragment())
+                    taskListFragment = TasksListFragment()
+                    pushFragment(taskListFragment)
                 }
 
                 R.id.settings -> {

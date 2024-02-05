@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.TimePicker
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.route.todoappc39g_mon_wed.OnTaskAddedListener
 import com.route.todoappc39g_mon_wed.R
+import com.route.todoappc39g_mon_wed.clearTime
 import com.route.todoappc39g_mon_wed.database.TasksDatabase
 import com.route.todoappc39g_mon_wed.database.models.Task
 import com.route.todoappc39g_mon_wed.databinding.FragmentAddTaskBinding
@@ -18,6 +20,9 @@ import java.util.Calendar
 class AddTaskBottomSheet : BottomSheetDialogFragment() {
     lateinit var binding: FragmentAddTaskBinding
     lateinit var calendar: Calendar
+
+    //2-
+    var onTaskAddedListener: OnTaskAddedListener? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -76,7 +81,9 @@ class AddTaskBottomSheet : BottomSheetDialogFragment() {
             picker.show()
         }
         binding.addTaskBtn.setOnClickListener {
+            // 1- Using callbacks between 2 fragments inside activity
             if (validateFields()) {
+                calendar.clearTime()
                 val task = Task(
                     title = binding.title.text.toString(),
                     description = binding.description.text.toString(),
@@ -88,6 +95,8 @@ class AddTaskBottomSheet : BottomSheetDialogFragment() {
                     .getInstance(requireContext())
                     .getTasksDao()
                     .insertTask(task)
+                //3-
+                onTaskAddedListener?.onTaskAdded()
                 dismiss()
             }
 

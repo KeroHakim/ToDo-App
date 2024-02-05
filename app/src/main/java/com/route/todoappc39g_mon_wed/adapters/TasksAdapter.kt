@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.route.todoappc39g_mon_wed.database.models.Task
 import com.route.todoappc39g_mon_wed.databinding.ItemTaskBinding
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class TasksAdapter(private var tasksList: List<Task>?) : Adapter<TasksAdapter.TasksViewHolder>() {
 
@@ -31,7 +33,9 @@ class TasksAdapter(private var tasksList: List<Task>?) : Adapter<TasksAdapter.Ta
     class TasksViewHolder(val binding: ItemTaskBinding) : ViewHolder(binding.root) {
         fun bind(task: Task) {
             binding.title.text = task.title
-            binding.time.text = task.date.toString()
+            val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val dateAsString = simpleDateFormat.format(task.date!!)
+            binding.time.text = dateAsString
         }
     }
 
