@@ -20,8 +20,6 @@ import java.util.Calendar
 class AddTaskBottomSheet : BottomSheetDialogFragment() {
     lateinit var binding: FragmentAddTaskBinding
     lateinit var calendar: Calendar
-
-    //2-
     var onTaskAddedListener: OnTaskAddedListener? = null
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,49 +34,10 @@ class AddTaskBottomSheet : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         calendar = Calendar.getInstance()
         binding.selectTimeTv.setOnClickListener {
-            val picker =
-                TimePickerDialog(
-                    requireContext(),
-                    object : TimePickerDialog.OnTimeSetListener {
-                        override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-                            // Calendar object <->  Dates , Time
-                            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                            calendar.set(Calendar.MINUTE, minute)
-//                            calendar.get(Calendar.AM_PM)
-                            binding.selectTimeTv.text = "$hourOfDay:$minute"
-                        }
-                    },
-                    calendar.get(Calendar.HOUR_OF_DAY),
-                    calendar.get(Calendar.MINUTE),
-                    false
-                )
-            picker.show()
+            getTimeDialogue()
         }
         binding.selectDateTv.setOnClickListener {
-            val picker =
-                DatePickerDialog(
-                    requireContext(),
-                    object : DatePickerDialog.OnDateSetListener {
-                        override fun onDateSet(
-                            view: DatePicker?,
-                            year: Int,
-                            month: Int,
-                            dayOfMonth: Int
-                        ) {
-                            calendar.set(Calendar.YEAR, year)
-                            calendar.set(Calendar.MONTH, month)
-                            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                            binding.selectDateTv.text = "$dayOfMonth / ${month + 1} / $year"
-                        }
-                    },
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH),
-
-
-                    )
-            picker.datePicker.minDate = System.currentTimeMillis()
-            picker.show()
+            getDateDialogue()
         }
         binding.addTaskBtn.setOnClickListener {
             // 1- Using callbacks between 2 fragments inside activity
@@ -104,6 +63,53 @@ class AddTaskBottomSheet : BottomSheetDialogFragment() {
 
     }
 
+    private fun getDateDialogue() {
+        val picker =
+            DatePickerDialog(
+                requireContext(),
+                object : DatePickerDialog.OnDateSetListener {
+                    override fun onDateSet(
+                        view: DatePicker?,
+                        year: Int,
+                        month: Int,
+                        dayOfMonth: Int
+                    ) {
+                        calendar.set(Calendar.YEAR, year)
+                        calendar.set(Calendar.MONTH, month)
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                        binding.selectDateTv.text = "$dayOfMonth / ${month + 1} / $year"
+                    }
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH),
+
+
+                )
+        picker.datePicker.minDate = System.currentTimeMillis()
+        picker.show()
+    }
+
+    private fun getTimeDialogue() {
+        val picker =
+            TimePickerDialog(
+                requireContext(),
+                object : TimePickerDialog.OnTimeSetListener {
+                    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+                        // Calendar object <->  Dates , Time
+                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                        calendar.set(Calendar.MINUTE, minute)
+//                            calendar.get(Calendar.AM_PM)
+                        binding.selectTimeTv.text = "$hourOfDay:$minute"
+                    }
+                },
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                false
+            )
+        picker.show()
+    }
+
     private fun validateFields(): Boolean {
         // ""                         // "              "    "     Hello   "
         if (binding.title.text?.isEmpty() == true || binding.title.text?.isBlank() == true) {
@@ -121,7 +127,6 @@ class AddTaskBottomSheet : BottomSheetDialogFragment() {
             return false
         }
         if (binding.selectTimeTv.text == getString(R.string.select_time)) {
-
             return false
         }
 

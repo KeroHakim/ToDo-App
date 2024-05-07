@@ -1,19 +1,20 @@
 package com.route.todoappc39g_mon_wed.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.prolificinteractive.materialcalendarview.CalendarDay
+import com.route.todoappc39g_mon_wed.Constant
+import com.route.todoappc39g_mon_wed.TaskEditActivity
 import com.route.todoappc39g_mon_wed.adapters.TasksAdapter
 import com.route.todoappc39g_mon_wed.clearTime
 import com.route.todoappc39g_mon_wed.database.TasksDatabase
 import com.route.todoappc39g_mon_wed.databinding.FragmentTasksBinding
 import java.util.Calendar
-import java.util.Date
 
 class TasksListFragment : Fragment() {
     lateinit var binding: FragmentTasksBinding
@@ -31,6 +32,12 @@ class TasksListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter = TasksAdapter(null)
+        Log.e("TAG","Error")
+        adapter.setOnTaskClickListener{
+            val intent = Intent(requireActivity(), TaskEditActivity::class.java)
+            intent.putExtra(Constant.TASK,it)
+            startActivity(intent)
+        }
         calendar = Calendar.getInstance()
         // Practice - Assignment -> Todo 
         binding.rvTasks.adapter = adapter
@@ -53,15 +60,6 @@ class TasksListFragment : Fragment() {
         }
         val today = CalendarDay.today()
         binding.calendarView.invalidate()
-        // 1- Swipe-to-Delete
-        // 2- Edit Activity
-        // 3- Settings Fragment - (Language - Mode)
-        val minDate: Date? = null
-        val maxDate: Date? = null
-        list.forEach {
-            minDate
-
-        }
         adapter.updateData(list)
     }
 

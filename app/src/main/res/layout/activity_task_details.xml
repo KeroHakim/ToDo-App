@@ -31,6 +31,6 @@
 
     <include
         android:id="@+id/content"
-        layout="@layout/content_task_details" />
+        layout="@layout/edit_task_fragment" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
